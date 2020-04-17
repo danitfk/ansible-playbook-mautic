@@ -1,8 +1,20 @@
 ---
-- name: install unzip
+- name: install unzip (Ubuntu/Debian)
   apt:
     name: unzip
     state: installed
+  when: firewall and ansible_os_family == "Debian" or  ansible_os_family == "Ubuntu"
+
+- name: install unzip (RHEL/CentOS)
+  yum:
+    name: unzip
+    state: present
+  when: firewall and ansible_os_family == "CentOS" or  ansible_os_family == "Redhat"
+
+- name: Disable SELinux (RHEL/CentOS)
+  selinux:
+    state: disabled
+  when: firewall and ansible_os_family == "CentOS" or  ansible_os_family == "Redhat"
 
 - name: download and unzip mautic
   unarchive:
